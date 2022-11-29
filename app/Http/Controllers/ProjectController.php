@@ -29,7 +29,7 @@ class ProjectController extends Controller
     public function create()
     {
         $id_siswa = request()->query('siswa');
-        $siswas = siswa::find($id_siswa);
+        $siswas = siswa::find($id);
         return view('admin.TambahProject', compact('siswas'));
     }
 
