@@ -3,14 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use App\Models\projek;
 use App\Models\siswa;
-use App\Models\project;
 
 class ProjectController extends Controller
 {
-    public function __constract() {
-        $this->middleware('Auth');
-    }
     /**
      * Display a listing of the resource.
      *
@@ -18,9 +16,9 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $project=project::all();
-        $data=siswa::all('id', 'nama');
-        return view('admin.MasterProject', compact('data'));
+        $siswas=siswa::all();
+        $projects=projek::with('siswa')->get();
+        return view('admin.MasterProject', compact('projects', 'siswas'));
     }
 
     /**
@@ -31,8 +29,8 @@ class ProjectController extends Controller
     public function create()
     {
         $id_siswa = request()->query('siswa');
-        $siswa = siswa::all();
-        return view('admin.TambahProject', compact('siswa', 'id_siswa'));
+        $siswas = siswa::find($id_siswa);
+        return view('admin.TambahProject', compact('siswas'));
     }
 
     /**
@@ -83,8 +81,8 @@ class ProjectController extends Controller
      */
     public function show($id)
     {
-        $data = siswa::find($id)->project()->get(); 
-        return view('admin.ShowProject', compact('data'));
+        $projeks = siswa::find($id)->projeks;
+        return view('projek.show_project', compact('projeks'));
     }
 
     /**
@@ -95,8 +93,10 @@ class ProjectController extends Controller
      */
     public function edit($id)
     {
-        $data = siswa::all();
-        return view('admin.EditProject');
+        projek::find($id);
+        $siswas = siswa::all();
+        $projects = projek::where('id',$id)->firstorfail();
+        return view('admin.EditProjek', compact('projects'), compact('siswas'));
     }
 
     /**
@@ -106,7 +106,7 @@ class ProjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, projek $masterproject)
     {
         $project = project::all();
         $massage=[
@@ -142,6 +142,7 @@ class ProjectController extends Controller
         return redirect('/mastersiswa');
     }
 
+
     /**
      * Remove the specified resource from storage.
      *
@@ -150,6 +151,10 @@ class ProjectController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $projects = projek::where('id', $id)->firstorfail();
+
+        $projects=projek::find($id)
+            ->delete();
+        return redirect('/admin/masterproject')->with('error', 'Berhasil Menghapus Data !');
     }
 }

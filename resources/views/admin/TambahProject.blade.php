@@ -19,7 +19,7 @@
                     @csrf
                     <div class="form-group">
                         @foreach ($siswa as $item)
-                        <input type="hidden" name="id_siswa" value="{{ $item->id_siswa }}">
+                        <input type="hidden" name="id_siswa" value="{{ $item->id }}">
                         @endforeach
                     </div>
                     <div class="form-group">
