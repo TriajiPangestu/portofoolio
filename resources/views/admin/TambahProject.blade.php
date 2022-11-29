@@ -18,7 +18,7 @@
                 <form method="POST" enctype="multipart/form-data" action="{{ route('masterproject.store')}}">
                     @csrf
                     <div class="form-group">
-                        @foreach ($siswa as $item)
+                        @foreach ($siswas as $item)
                         <input type="hidden" name="id_siswa" value="{{ $item->id }}">
                         @endforeach
                     </div>
