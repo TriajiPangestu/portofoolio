@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Models\projek;
+use App\Models\project;
 use App\Models\siswa;
 
 class ProjectController extends Controller
@@ -17,7 +17,7 @@ class ProjectController extends Controller
     public function index()
     {
         $siswas=siswa::all();
-        $projects=projek::with('siswa')->get();
+        $projects=project::with('siswa')->get();
         return view('admin.MasterProject', compact('projects', 'siswas'));
     }
 
@@ -82,7 +82,7 @@ class ProjectController extends Controller
     public function show($id)
     {
         $projeks = siswa::find($id)->projeks;
-        return view('projek.show_project', compact('projeks'));
+        return view('admin.ShowProject', compact('projeks'));
     }
 
     /**
@@ -93,9 +93,9 @@ class ProjectController extends Controller
      */
     public function edit($id)
     {
-        projek::find($id);
+        project::find($id);
         $siswas = siswa::all();
-        $projects = projek::where('id',$id)->firstorfail();
+        $projects = project::where('id',$id)->firstorfail();
         return view('admin.EditProjek', compact('projects'), compact('siswas'));
     }
 
@@ -106,7 +106,7 @@ class ProjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, projek $masterproject)
+    public function update(Request $request, project $masterproject)
     {
         $project = project::all();
         $massage=[
@@ -151,9 +151,9 @@ class ProjectController extends Controller
      */
     public function destroy($id)
     {
-        $projects = projek::where('id', $id)->firstorfail();
+        $projects = project::where('id', $id)->firstorfail();
 
-        $projects=projek::find($id)
+        $projects=project::find($id)
             ->delete();
         return redirect('/admin/masterproject')->with('error', 'Berhasil Menghapus Data !');
     }
